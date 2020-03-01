@@ -2,7 +2,7 @@
 import { ApolloServer, makeExecutableSchema } from 'apollo-server'
 
 // Models
-import Expense from '@models/Expense'
+import Transaction from '@models/Transaction'
 
 // Type Definitions
 import typeDefs from '@types'
@@ -31,7 +31,7 @@ const apolloServer = new ApolloServer({
   schema,
   context: {
     models: {
-      Expense
+      Transaction
     }
   }
 })
@@ -40,11 +40,9 @@ db()
   .then(() => {
     console.log('MongoDB Connected')
 
-    app.listen({ port: $port() }, () => {
+    apolloServer.listen($port()).then(({ url, subscriptionsPath }) => {
       console.log(
-        `🚀 Server ready at http://localhost:${$port()}${
-          apolloServer.graphqlPath
-        }`
+        `🚀  Server ready at ${url}${subscriptionsPath.replace('/', '')}`
       )
     })
   })
