@@ -1,0 +1,7 @@
+// Dependencies
+import { join } from 'path'
+import { fileLoader, mergeTypes } from 'merge-graphql-schemas'
+
+const typesArray = fileLoader(join(__dirname, '.'))
+
+export default mergeTypes(typesArray, { all: true })
