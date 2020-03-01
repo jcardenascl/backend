@@ -1,0 +1,22 @@
+type Transaction {
+  id: ID!
+  description: String!
+  ammount: Int!
+  currency: Currency!
+  createdAt: String!
+  updatedAt: String!
+}
+
+enum Currency {
+  VEF: {
+    value: 'VEF'
+  },
+  USD: {
+    value: 'USD'
+  }
+}
+
+type Query {
+  "Get all transactions"
+  transactions: [Transaction!]
+}

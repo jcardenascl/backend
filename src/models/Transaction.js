@@ -1,7 +1,7 @@
 // Dependencies
 import { Schema, model } from 'mongoose'
 
-const ExpenseSchema = new Schema({
+const TransactionSchema = new Schema({
   description: {
     type: String,
     required: [true, 'Please add a description']
@@ -10,20 +10,21 @@ const ExpenseSchema = new Schema({
     type: Number,
     required: [true, 'Please add an ammount']
   },
-  type: {
-    type: String,
-    enum: ['more', 'minus'],
-    required: () => {
-      this.ammount > 0
-    }
-  },
   currency: {
     type: String,
     enum: ['VEF', 'USD'],
     required: [true, 'Please choose a correct currency: VEF or USD']
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
   }
 })
 
-const Expense = model('expenses', ExpenseSchema)
+const Transaction = model('transaction', TransactionSchema)
 
-export default Expense
+export default Transaction
