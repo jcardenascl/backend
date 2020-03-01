@@ -2,11 +2,40 @@ type Transaction {
   id: ID!
   description: String!
   ammount: Int!
-  createdAt: String!
-  updatedAt: String!
+  currency: Currency!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input TransactionInput {
+  description: String!
+  ammount: Int!
+  currency: Currency!
+}
+
+input UpdateTransactionInput {
+  description: String
+  ammount: Int
+  currency: Currency
+}
+
+enum Currency {
+  VEF
+  USD
 }
 
 type Query {
   "Get all transactions"
   transactions: [Transaction]
+  "Get a transaction"
+  transaction(id: ID!): Transaction
+}
+
+type Mutation {
+  "Create transaction"
+  transaction(input: TransactionInput!): Transaction
+  "Update transaction"
+  updateTransaction(id: ID!, input: UpdateTransactionInput): Transaction
+  "Delete todo"
+  deleteTransaction(id: ID!): String
 }
