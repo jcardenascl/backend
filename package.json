@@ -4,7 +4,7 @@
   "description": "Backend service in GraphQL for the Expense Tracker app",
   "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/server.js --exec babel-node src/server.js"
   },
   "keywords": [
     "\"expense",
@@ -19,9 +19,23 @@
     "@babel/core": "^7.8.6",
     "@babel/node": "^7.8.4",
     "@babel/preset-env": "^7.8.6",
+    "babel-plugin-import-graphql": "^2.7.0",
+    "babel-plugin-module-resolver": "^4.0.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-import-resolver-babel-module": "^5.1.2",
-    "eslint-plugin-import": "^2.20.1"
+    "eslint-plugin-import": "^2.20.1",
+    "husky": "^4.2.3",
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "apollo-server": "^2.10.1",
+    "colors": "^1.4.0",
+    "dotenv": "^8.2.0",
+    "fogg-utils": "^1.1.9",
+    "graphql": "^14.6.0",
+    "merge-graphql-schemas": "^1.7.6",
+    "mongoose": "^5.9.2"
   }
 }

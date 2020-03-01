@@ -1,0 +1,28 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["./src"],
+        "alias": {
+          "@config": "./src/config",
+          "@lib": "./src/lib",
+          "@resolvers": "./src/graphql/resolvers",
+          "@types": "./src/graphql/types",
+          "@models": "./src/models"
+        }
+      }
+    ],
+    "import-graphql"
+  ]
+}
