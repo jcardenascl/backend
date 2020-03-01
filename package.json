@@ -1,0 +1,18 @@
+{
+  "name": "expense-tracker-backend",
+  "version": "1.0.0",
+  "description": "Backend service in GraphQL for the Expense Tracker app",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "\"expense",
+    "tracker\"",
+    "backend",
+    "graphql",
+    "mongo"
+  ],
+  "author": "Daniel Esteves <estevesd8@gmail.com>",
+  "license": "MIT"
+}
