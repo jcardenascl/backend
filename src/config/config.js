@@ -2,6 +2,9 @@
 require('dotenv').config()
 
 export const serverPort = process.env.PORT || 5000
+export const cors = {
+  origin: process.env.CORS
+}
 export const db = {
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,

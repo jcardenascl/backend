@@ -1,5 +1,8 @@
 // Dependencies
-import { ApolloServer, makeExecutableSchema } from 'apollo-server'
+import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
+import express from 'express'
+import cors from 'cors'
+import morgan from 'morgan'
 
 // Models
 import Transaction from '@models/Transaction'
@@ -14,7 +17,10 @@ import resolvers from '@resolvers'
 import db from '@lib/database'
 
 // Configuration
-import { $port } from '@config'
+import { $port, $cors } from '@config'
+
+// Middlewares
+import notFoundHandler from '@utils/middlewares/notFoundHandler'
 
 // Schema
 const schema = makeExecutableSchema({
@@ -23,7 +29,7 @@ const schema = makeExecutableSchema({
 })
 
 // Apollo Server
-const apolloServer = new ApolloServer({
+const server = new ApolloServer({
   cors: {
     origin: '*',
     credentials: true
@@ -36,13 +42,37 @@ const apolloServer = new ApolloServer({
   }
 })
 
+const app = express()
+const path = '/graphql'
+
+// Init middlewares
+if (app.get('env') === 'production') {
+  app.use(
+    morgan('common', {
+      skip(req, res) {
+        return res.statusCode < 400
+      },
+      stream: `${__dirname}/../morgan.log`
+    })
+  )
+} else {
+  app.use(morgan('dev'))
+}
+app.use(cors($cors()))
+app.use(express.json())
+
+server.applyMiddleware({ app, path })
+
+// Catch 404
+app.use(notFoundHandler)
+
 db()
   .then(() => {
     console.log('MongoDB Connected')
 
-    apolloServer.listen($port()).then(({ url, subscriptionsPath }) => {
+    app.listen({ port: $port() }, () => {
       console.log(
-        `🚀  Server ready at ${url}${subscriptionsPath.replace('/', '')}`
+        `🚀  Server ready at http://localhost:${$port()}${server.graphqlPath}`
       )
     })
   })

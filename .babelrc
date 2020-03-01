@@ -19,7 +19,8 @@
           "@lib": "./src/lib",
           "@resolvers": "./src/graphql/resolvers",
           "@types": "./src/graphql/types",
-          "@models": "./src/models"
+          "@models": "./src/models",
+          "@utils": "./src/utils"
         }
       }
     ],
