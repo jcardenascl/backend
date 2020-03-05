@@ -11,3 +11,7 @@ export const db = {
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD
 }
+export const security = {
+  secretKey: process.env.SECRET_KEY,
+  expiresIn: process.env.EXPIRES_IN
+}

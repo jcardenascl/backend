@@ -6,6 +6,7 @@ import morgan from 'morgan'
 
 // Models
 import Transaction from '@models/Transaction'
+import User from '@models/User'
 
 // Type Definitions
 import typeDefs from '@types'
@@ -37,7 +38,8 @@ const server = new ApolloServer({
   schema,
   context: {
     models: {
-      Transaction
+      Transaction,
+      User
     }
   }
 })

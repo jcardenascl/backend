@@ -17,7 +17,8 @@ async function db() {
     connection = await mongoose.connect(mongoUrl, {
       useNewUrlParser: true,
       useCreateIndex: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useFindAndModify: false
     })
   } catch (error) {
     console.error('❌ Could not connect to db', error)

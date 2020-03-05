@@ -1,24 +1,32 @@
 // Error Handler
 import errorHandler from '@lib/errorHandler'
 
+import User from '../../models/User'
+
 export default {
   Query: {
-    transactions: async (_, args, { models: { Transaction } }) => {
+    transactions: async (_, { user }, { models: { Transaction } }) => {
       let transactions
 
       try {
-        transactions = await Transaction.find().exec()
+        transactions = await Transaction.find({ user }).populate(
+          'user',
+          'id firstName lastName username email'
+        )
       } catch (error) {
         errorHandler(error)
       }
 
       return transactions
     },
-    transaction: async (_, { id }, { models: { Transaction } }) => {
+    transaction: async (_, { user, id }, { models: { Transaction } }) => {
       let transaction
 
       try {
-        transaction = await Transaction.findById({ _id: id }).exec()
+        transaction = await Transaction.findOne({ _id: id, user }).populate(
+          'user',
+          'id firstName lastName username email'
+        )
       } catch (error) {
         errorHandler(error)
       }
@@ -27,13 +35,32 @@ export default {
     }
   },
   Mutation: {
-    transaction: async (_, { input }, { models: { Transaction } }) => {
+    transaction: async (
+      _,
+      { user: userId, input },
+      { models: { Transaction } }
+    ) => {
       let transaction
+      let user
 
       try {
-        transaction = await Transaction.create(input)
+        user = await User.findById({ _id: userId })
       } catch (error) {
         errorHandler(error)
+      }
+
+      if (user) {
+        try {
+          transaction = await Transaction.create(input)
+
+          await User.findOneAndUpdate(
+            { _id: userId },
+            { $push: { transactions: transaction._id } },
+            { new: true }
+          )
+        } catch (error) {
+          errorHandler(error)
+        }
       }
 
       return transaction

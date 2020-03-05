@@ -15,11 +15,15 @@ const TransactionSchema = new Schema(
       type: String,
       enum: ['VEF', 'USD'],
       required: [true, 'Please choose a correct currency: VEF or USD']
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'users'
     }
   },
   { timestamps: true }
 )
 
-const Transaction = model('transaction', TransactionSchema)
+const Transaction = model('transactions', TransactionSchema)
 
 export default Transaction
