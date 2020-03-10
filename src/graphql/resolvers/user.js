@@ -1,6 +1,9 @@
 // Error Handler
 import errorHandler from '@lib/errorHandler'
 
+// Login
+import { doLogin } from '@utils/auth'
+
 export default {
   Query: {
     users: async (_, args, { models: { User } }) => {
@@ -26,6 +29,9 @@ export default {
       }
 
       return user
+    },
+    login: (_, { input: { email, password } }, { models }) => {
+      return doLogin(email, password, models)
     }
   }
 }

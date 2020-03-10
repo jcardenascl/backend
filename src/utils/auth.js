@@ -30,25 +30,22 @@ export const createToken = async user => {
 }
 
 export const doLogin = async (email, password, models) => {
-  const user = await models.User.findOne({
-    where: { email },
-    raw: true
-  })
+  const user = await models.User.findOne({ email })
 
   if (!user) {
     throw new AuthenticationError('Invalid login')
   }
 
   const passwordMatch = isPasswordMatch(encrypt(password), user.password)
-  const isActive = user.active
+  // const isActive = user.active
 
   if (!passwordMatch) {
     throw new AuthenticationError('Invalid login')
   }
 
-  if (!isActive) {
-    throw new AuthenticationError('Your account is not activated yet')
-  }
+  // if (!isActive) {
+  //   throw new AuthenticationError('Your account is not activated yet')
+  // }
 
   const [token] = await createToken(user)
 

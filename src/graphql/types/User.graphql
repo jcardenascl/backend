@@ -8,6 +8,10 @@ type User {
   transactions: [Transaction]
 }
 
+type AuthPayload {
+  token: String!
+}
+
 input UserInput {
   firstName: String
   lastName: String
@@ -24,6 +28,11 @@ input UpdateUserInput {
   password: String
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
 type Query {
   "Get all users"
   users: [User]
@@ -32,4 +41,6 @@ type Query {
 type Mutation {
   "Create user"
   user(input: UserInput!): User
+  "Login user"
+  login(input: LoginInput): AuthPayload!
 }
