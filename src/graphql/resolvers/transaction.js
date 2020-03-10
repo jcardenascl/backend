@@ -63,39 +63,65 @@ export default {
         }
       }
 
-      return transaction
+      return null
     },
     updateTransaction: async (
       _,
-      { id, input },
+      { user: userId, id, input },
       { models: { Transaction } }
     ) => {
       let transaction
+      let user
 
       try {
-        transaction = await Transaction.findOneAndUpdate(
-          { _id: id },
-          { $set: input },
-          { new: true, useFindAndModify: false }
-        )
+        user = await User.findById({ _id: userId })
       } catch (error) {
         errorHandler(error)
       }
 
-      return transaction
+      if (user) {
+        try {
+          transaction = await Transaction.findOneAndUpdate(
+            { _id: id },
+            { $set: input },
+            { new: true, useFindAndModify: false }
+          )
+        } catch (error) {
+          errorHandler(error)
+        }
+
+        return transaction
+      }
+
+      return null
     },
-    deleteTransaction: async (_, { id }, { models: { Transaction } }) => {
+    deleteTransaction: async (
+      _,
+      { user: userId, id },
+      { models: { Transaction } }
+    ) => {
       let transaction
+      let user
 
       try {
-        transaction = await Transaction.findOneAndDelete({ _id: id })
+        user = await User.findById({ _id: userId })
       } catch (error) {
         errorHandler(error)
       }
 
-      return transaction !== null
-        ? `Transaction:${id} deleted successfully`
-        : `Transaction:${id} didn't exist`
+      if (user) {
+        try {
+          transaction = await Transaction.findOneAndDelete({ _id: id })
+        } catch (error) {
+          errorHandler(error)
+        }
+
+        return transaction !== null
+          ? `Transaction:${id} deleted successfully`
+          : `Transaction:${id} didn't exist`
+      }
+
+      return "You don't have permissions to make this operation"
     }
   }
 }

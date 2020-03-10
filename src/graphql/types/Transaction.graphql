@@ -37,7 +37,11 @@ type Mutation {
   "Create transaction"
   transaction(user: ID!, input: TransactionInput!): Transaction
   "Update transaction"
-  updateTransaction(id: ID!, input: UpdateTransactionInput): Transaction
+  updateTransaction(
+    user: ID!
+    id: ID!
+    input: UpdateTransactionInput!
+  ): Transaction
   "Delete transaction"
-  deleteTransaction(id: ID!): String
+  deleteTransaction(user: ID!, id: ID!): String
 }
