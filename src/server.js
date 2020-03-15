@@ -3,6 +3,8 @@ import { ApolloServer, makeExecutableSchema } from 'apollo-server-express'
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
+import session from 'express-session'
+import uuid from 'uuid/v4'
 
 // Models
 import Transaction from '@models/Transaction'
@@ -18,7 +20,7 @@ import resolvers from '@resolvers'
 import db from '@lib/database'
 
 // Configuration
-import { $port, $cors } from '@config'
+import { $port, $cors, $security } from '@config'
 
 // Middlewares
 import notFoundHandler from '@utils/middlewares/notFoundHandler'
@@ -62,6 +64,14 @@ if (app.get('env') === 'production') {
 }
 app.use(cors($cors()))
 app.use(express.json())
+app.use(
+  session({
+    genid: () => uuid(),
+    secret: $security().secretKey,
+    resave: false,
+    saveUninitialized: false
+  })
+)
 
 server.applyMiddleware({ app, path })
 
