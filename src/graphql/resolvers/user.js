@@ -25,7 +25,17 @@ export default {
       try {
         user = await User.create({ ...input })
       } catch (error) {
-        errorHandler(error)
+        if (error.code === 11000) {
+          if (error.keyPattern.username) {
+            errorHandler(error.errmsg, 'Username is already taken')
+          }
+
+          if (error.keyPattern.email) {
+            errorHandler(error.errmsg, 'Email is already taken')
+          }
+        } else {
+          errorHandler(error, error.errors)
+        }
       }
 
       return user

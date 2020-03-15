@@ -1,4 +1,5 @@
-export default function errorHandler(err) {
+export default function errorHandler(err, msg) {
   console.error(err)
-  throw new Error('Operation failed')
+
+  throw new Error(msg)
 }
