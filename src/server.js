@@ -5,6 +5,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 import session from 'express-session'
 import uuid from 'uuid/v4'
+import passport from 'passport'
 
 // Models
 import Transaction from '@models/Transaction'
@@ -38,16 +39,29 @@ const server = new ApolloServer({
     credentials: true
   },
   schema,
-  context: {
+  context: ({ req }) => ({
+    getUser: () => req.user,
+    logout: () => req.logout(),
     models: {
       Transaction,
       User
     }
-  }
+  })
 })
 
 const app = express()
 const path = '/graphql'
+
+// Passport
+passport.serializeUser((user, done) => {
+  done(null, user.id)
+})
+
+passport.deserializeUser((id, done) => {
+  const users = User.getUsers()
+  const matchingUser = users.find(user => user.id === id)
+  done(null, matchingUser)
+})
 
 // Init middlewares
 if (app.get('env') === 'production') {
@@ -72,6 +86,8 @@ app.use(
     saveUninitialized: false
   })
 )
+app.use(passport.initialize())
+app.use(passport.session())
 
 server.applyMiddleware({ app, path })
 
