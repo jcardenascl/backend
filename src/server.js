@@ -6,6 +6,7 @@ import morgan from 'morgan'
 import session from 'express-session'
 import uuid from 'uuid/v4'
 import passport from 'passport'
+import FacebookStrategy from 'passport-facebook'
 
 // Models
 import Transaction from '@models/Transaction'
@@ -21,7 +22,7 @@ import resolvers from '@resolvers'
 import db from '@lib/database'
 
 // Configuration
-import { $port, $cors, $security } from '@config'
+import { $port, $cors, $security, $fb } from '@config'
 
 // Middlewares
 import notFoundHandler from '@utils/middlewares/notFoundHandler'
@@ -51,6 +52,33 @@ const server = new ApolloServer({
 
 const app = express()
 const path = '/graphql'
+const facebookOptions = {
+  clientID: $fb().clientId,
+  clientSecret: $fb().clientSecret,
+  callbackURL: $fb().callbackUrl,
+  profileFields: ['id', 'email', 'first_name', 'last_name']
+}
+const facebookCallback = (accessToken, refreshToken, profile, done) => {
+  const users = User.getUsers()
+  const matchingUser = users.find(user => user.facebookId === profile.id)
+
+  if (matchingUser) {
+    done(null, matchingUser)
+    return
+  }
+
+  const newUser = {
+    id: uuid(),
+    facebookId: profile.id,
+    firstName: profile.name.givenName,
+    lastName: profile.name.familyName,
+    email: profile.emails && profile.emails[0] && profile.emails[0].value
+  }
+
+  users.push(newUser)
+
+  done(null, newUser)
+}
 
 // Passport
 passport.serializeUser((user, done) => {
@@ -88,8 +116,22 @@ app.use(
 )
 app.use(passport.initialize())
 app.use(passport.session())
+passport.use(new FacebookStrategy(facebookOptions, facebookCallback))
 
 server.applyMiddleware({ app, path })
+
+// Routes
+app.get(
+  '/auth/facebook',
+  passport.authenticate('facebook', { scope: ['email'] })
+)
+app.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: 'http://localhost:4000/graphql',
+    failureRedirect: 'http://localhost:4000/graphql'
+  })
+)
 
 // Catch 404
 app.use(notFoundHandler)

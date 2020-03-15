@@ -34,6 +34,8 @@ input LoginInput {
 }
 
 type Query {
+  "Get current user"
+  currentUser: User
   "Get all users"
   users: [User]
 }
@@ -43,4 +45,6 @@ type Mutation {
   user(input: UserInput!): User
   "Login user"
   login(input: LoginInput): AuthPayload!
+  "Logout user"
+  logout: Boolean
 }

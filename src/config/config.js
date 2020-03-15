@@ -15,3 +15,8 @@ export const security = {
   secretKey: process.env.SECRET_KEY,
   expiresIn: process.env.EXPIRES_IN
 }
+export const fb = {
+  clientId: process.env.FACEBOOK_CLIENT_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
+  callbackUrl: process.env.FACEBOKK_CALLBACK_URL
+}

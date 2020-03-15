@@ -6,6 +6,7 @@ import { doLogin } from '@utils/auth'
 
 export default {
   Query: {
+    currentUser: (_, args, context) => context.getUser(),
     users: async (_, args, { models: { User } }) => {
       let users
 
@@ -42,6 +43,7 @@ export default {
     },
     login: (_, { input: { email, password } }, { models }) => {
       return doLogin(email, password, models)
-    }
+    },
+    logout: (_, args, context) => context.logout()
   }
 }
