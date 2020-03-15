@@ -42,7 +42,6 @@ export default {
     },
     login: (_, { input: { email, password } }, { models }) => {
       return doLogin(email, password, models)
-    },
-    logout: (_, args, context) => context.logout()
+    }
   }
 }
