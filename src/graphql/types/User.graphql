@@ -12,6 +12,15 @@ type AuthPayload {
   token: String!
 }
 
+type AuthResponse {
+  token: String
+  name: String
+}
+
+input SocialAuthPayload {
+  accessToken: String!
+}
+
 input UserInput {
   firstName: String
   lastName: String
@@ -43,8 +52,12 @@ type Query {
 type Mutation {
   "Create user"
   user(input: UserInput!): User
-  "Login user"
-  login(input: LoginInput): AuthPayload!
+  # "Login user"
+  # login(input: LoginInput): AuthPayload!
+  "Register/login with Facebook"
+  facebookAuth(input: SocialAuthPayload!): AuthResponse
+  "Register/login with Google"
+  googleAuth(input: SocialAuthPayload!): AuthResponse
   "Logout user"
   logout: Boolean
 }

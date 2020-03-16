@@ -20,3 +20,7 @@ export const fb = {
   clientSecret: process.env.FACEBOOK_APP_SECRET,
   callbackUrl: process.env.FACEBOKK_CALLBACK_URL
 }
+export const gl = {
+  clientId: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET
+}

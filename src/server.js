@@ -39,7 +39,7 @@ const server = new ApolloServer({
     credentials: true
   },
   schema,
-  context: ({ req }) => {
+  context: ({ req, res }) => {
     // Get the user token from the headers.
     const token = req.headers.authorization || ''
 
@@ -48,6 +48,8 @@ const server = new ApolloServer({
 
     // add the user to the context
     return {
+      req,
+      res,
       user,
       models: {
         Transaction,

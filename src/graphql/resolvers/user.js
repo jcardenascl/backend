@@ -2,7 +2,11 @@
 import errorHandler from '@lib/errorHandler'
 
 // Login
-import { doLogin } from '@utils/auth'
+// import { doLogin } from '@utils/auth'
+import {
+  facebookAuth as authFacebook,
+  googleAuth as authGoogle
+} from '@utils/passport'
 
 export default {
   Query: {
@@ -48,8 +52,88 @@ export default {
 
       return user
     },
-    login: (_, { input: { email, password } }, { models }) => {
-      return doLogin(email, password, models)
+    facebookAuth: async (
+      _,
+      { input: { accessToken } },
+      { req, res, models: { User } }
+    ) => {
+      req.body = {
+        ...req.body,
+        access_token: accessToken
+      }
+
+      try {
+        // data contains the accessToken, refreshToken and profile from passport
+        const { data, info } = await authFacebook(req, res)
+
+        if (data) {
+          const user = await User.upsertFbUser(data)
+
+          if (user) {
+            return {
+              name: `${user.firstName} ${user.lastName}`,
+              token: user.generateJWT()
+            }
+          }
+        }
+
+        if (info) {
+          console.log(info)
+          switch (info.code) {
+            case 'ETIMEDOUT':
+              return new Error('Failed to reach Facebook: Try Again')
+            default:
+              return new Error('Something went wrong')
+          }
+        }
+
+        return Error('Server error')
+      } catch (error) {
+        return error
+      }
+    },
+    googleAuth: async (
+      _,
+      { input: { accessToken } },
+      { req, res, model: { User } }
+    ) => {
+      req.body = {
+        ...req.body,
+        access_token: accessToken
+      }
+
+      try {
+        // data contains the accessToken, refreshToken and profile from passport
+        const { data, info } = await authGoogle(req, res)
+
+        if (data) {
+          const user = await User.upsertGoogleUser(data)
+
+          if (user) {
+            return {
+              name: user.name,
+              token: user.generateJWT()
+            }
+          }
+        }
+
+        if (info) {
+          console.log(info)
+          switch (info.code) {
+            case 'ETIMEDOUT':
+              return new Error('Failed to reach Google: Try Again')
+            default:
+              return new Error('Something went wrong')
+          }
+        }
+
+        return Error('server error')
+      } catch (error) {
+        return error
+      }
     }
+    // login: (_, { input: { email, password } }, { models }) => {
+    //   return doLogin(email, password, models)
+    // }
   }
 }
