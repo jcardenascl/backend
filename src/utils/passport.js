@@ -1,7 +1,7 @@
 // Dependencies
 import passport from 'passport'
 import FacebookTokenStrategy from 'passport-facebook-token'
-import { Strategy as GoogleTokenStrategy } from 'passport-google-token'
+import { Strategy as GoogleTokenStrategy } from 'passport-google-oauth20'
 
 // Configuration
 import { $fb, $gl } from '@config'
@@ -52,7 +52,7 @@ passport.use(
   )
 )
 
-// promisified authenticate functions
+// Promisified authenticate functions
 const facebookAuth = (req, res) =>
   new Promise((resolve, reject) => {
     passport.authenticate(
@@ -60,6 +60,7 @@ const facebookAuth = (req, res) =>
       { session: false },
       (err, data, info) => {
         if (err) reject(err)
+
         resolve({ data, info })
       }
     )(req, res)
@@ -69,9 +70,16 @@ const googleAuth = (req, res) =>
   new Promise((resolve, reject) => {
     passport.authenticate(
       'google-token',
-      { session: false },
+      {
+        session: false,
+        scope: [
+          'https://www.googleapis.com/auth/plus.login',
+          'https://www.googleapis.com/auth/userinfo.email'
+        ]
+      },
       (err, data, info) => {
         if (err) reject(err)
+
         resolve({ data, info })
       }
     )(req, res)

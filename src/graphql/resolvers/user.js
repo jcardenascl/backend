@@ -95,7 +95,7 @@ export default {
     googleAuth: async (
       _,
       { input: { accessToken } },
-      { req, res, model: { User } }
+      { req, res, models: { User } }
     ) => {
       req.body = {
         ...req.body,
@@ -132,8 +132,5 @@ export default {
         return error
       }
     }
-    // login: (_, { input: { email, password } }, { models }) => {
-    //   return doLogin(email, password, models)
-    // }
   }
 }
