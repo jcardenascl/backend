@@ -6,6 +6,14 @@ import { doLogin } from '@utils/auth'
 
 export default {
   Query: {
+    currentUser: (_, args, { user: auth, models: { User } }) => {
+      // this if statement is our authentication check
+      if (!auth) {
+        errorHandler(null, 'Not Authenticated')
+      }
+
+      return User.find({ _id: auth.id })
+    },
     users: async (_, args, { models: { User } }) => {
       let users
 

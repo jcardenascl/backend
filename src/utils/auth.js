@@ -8,6 +8,18 @@ import { encrypt, setBase64, isPasswordMatch } from 'fogg-utils'
 // Configuration
 import { $security } from '@config'
 
+export const getUser = token => {
+  try {
+    if (token) {
+      return jwt.verify(token, $security().secretKey)
+    }
+
+    return null
+  } catch (err) {
+    return null
+  }
+}
+
 export const createToken = async user => {
   const { id, username, password, email, privilege, active } = user
   const token = setBase64(`${encrypt($security().secretKey)}${password}`)

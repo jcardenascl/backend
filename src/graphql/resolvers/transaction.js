@@ -1,11 +1,15 @@
 // Error Handler
 import errorHandler from '@lib/errorHandler'
 
-import User from '../../models/User'
-
 export default {
   Query: {
-    transactions: async (_, { user }, { models: { Transaction } }) => {
+    transactions: async (
+      _,
+      { user },
+      { user: auth, models: { Transaction } }
+    ) => {
+      if (!auth) errorHandler('Not authorized', 'You must be logged in')
+
       let transactions
 
       try {
@@ -19,7 +23,13 @@ export default {
 
       return transactions
     },
-    transaction: async (_, { user, id }, { models: { Transaction } }) => {
+    transaction: async (
+      _,
+      { user, id },
+      { user: auth, models: { Transaction } }
+    ) => {
+      if (!auth) errorHandler('Not authorized', 'You must be logged in')
+
       let transaction
 
       try {
@@ -38,8 +48,10 @@ export default {
     transaction: async (
       _,
       { user: userId, input },
-      { models: { Transaction } }
+      { user: auth, models: { Transaction, User } }
     ) => {
+      if (!auth) errorHandler('Not authorized', 'You must be logged in')
+
       let transaction
       let user
 
@@ -68,8 +80,10 @@ export default {
     updateTransaction: async (
       _,
       { user: userId, id, input },
-      { models: { Transaction } }
+      { user: auth, models: { Transaction, User } }
     ) => {
+      if (!auth) errorHandler('Not authorized', 'You must be logged in')
+
       let transaction
       let user
 
@@ -98,8 +112,10 @@ export default {
     deleteTransaction: async (
       _,
       { user: userId, id },
-      { models: { Transaction } }
+      { user: auth, models: { Transaction, User } }
     ) => {
+      if (!auth) errorHandler('Not authorized', 'You must be logged in')
+
       let transaction
       let user
 

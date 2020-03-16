@@ -23,6 +23,9 @@ import { $port, $cors } from '@config'
 // Middlewares
 import notFoundHandler from '@utils/middlewares/notFoundHandler'
 
+// Utils
+import { getUser } from '@utils/auth'
+
 // Schema
 const schema = makeExecutableSchema({
   typeDefs,
@@ -36,10 +39,20 @@ const server = new ApolloServer({
     credentials: true
   },
   schema,
-  context: {
-    models: {
-      Transaction,
-      User
+  context: ({ req }) => {
+    // Get the user token from the headers.
+    const token = req.headers.authorization || ''
+
+    // try to retrieve a user with the token
+    const user = getUser(token)
+
+    // add the user to the context
+    return {
+      user,
+      models: {
+        Transaction,
+        User
+      }
     }
   }
 })
