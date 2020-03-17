@@ -24,3 +24,7 @@ export const gl = {
   clientId: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET
 }
+export const auth0 = {
+  audience: process.env.AUTH0_AUDIENCE,
+  url: process.env.AUTH0_URL
+}

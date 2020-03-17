@@ -1,7 +1,7 @@
 // Dependencies
 import passport from 'passport'
 import FacebookTokenStrategy from 'passport-facebook-token'
-import { Strategy as GoogleTokenStrategy } from 'passport-google-oauth20'
+import { Strategy as GoogleTokenStrategy } from 'passport-google-oauth'
 
 // Configuration
 import { $fb, $gl } from '@config'
@@ -45,9 +45,8 @@ const GoogleTokenStrategyCallback = (
 passport.use(
   new GoogleTokenStrategy(
     {
-      clientID: $gl().clientId,
-      clientSecret: $gl().clientSecret,
-      passReqToCallback: true
+      consumerKey: $gl().clientId,
+      consumerSecret: $gl().clientSecret
     },
     GoogleTokenStrategyCallback
   )
@@ -70,7 +69,7 @@ const facebookAuth = (req, res) =>
 const googleAuth = (req, res) =>
   new Promise((resolve, reject) => {
     passport.authenticate(
-      'google-token',
+      'google',
       {
         session: false,
         scope: [

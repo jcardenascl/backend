@@ -47,7 +47,7 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.1",
     "passport-facebook-token": "^3.3.0",
-    "passport-google-oauth20": "^2.0.0",
+    "passport-google-oauth": "^2.0.0",
     "passport-token-google2": "^0.1.4",
     "uuid": "^7.0.2"
   }
