@@ -87,7 +87,6 @@ UserSchema.methods.generateJWT = function generateJwt() {
 
 UserSchema.statics.upsertFbUser = async function facebookAuth({
   accessToken,
-  refreshToken,
   profile
 }) {
   const User = this
@@ -117,7 +116,6 @@ UserSchema.statics.upsertFbUser = async function facebookAuth({
 
 UserSchema.statics.upsertGoogleUser = async function googleAuth({
   accessToken,
-  refreshToken,
   profile
 }) {
   const User = this

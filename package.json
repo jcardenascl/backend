@@ -4,7 +4,8 @@
   "description": "Backend service in GraphQL for the Expense Tracker app",
   "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon src/server.js --ext js,graphql --exec babel-node"
+    "dev": "nodemon src/server.js --ext js,graphql --exec babel-node",
+    "lint": "eslint ."
   },
   "keywords": [
     "\"expense",

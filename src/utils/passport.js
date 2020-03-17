@@ -46,7 +46,8 @@ passport.use(
   new GoogleTokenStrategy(
     {
       clientID: $gl().clientId,
-      clientSecret: $gl().clientSecret
+      clientSecret: $gl().clientSecret,
+      passReqToCallback: true
     },
     GoogleTokenStrategyCallback
   )
