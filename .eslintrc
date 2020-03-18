@@ -16,7 +16,7 @@
   },
   "rules": {
     "no-console": "off",
-    "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+    "no-underscore-dangle": ["error", { "allow": ["_id", "_json"] }],
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
   },
   "settings": {

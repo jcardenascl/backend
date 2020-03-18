@@ -111,7 +111,7 @@ export default {
 
           if (user) {
             return {
-              name: user.name,
+              name: `${user.firstName} ${user.lastName}`,
               token: user.generateJWT()
             }
           }

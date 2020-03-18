@@ -124,12 +124,16 @@ UserSchema.statics.upsertGoogleUser = async function googleAuth({
   // no user was found, lets create a new one
   if (!user) {
     const newUser = await User.create({
-      name: profile.displayName || `${profile.familyName} ${profile.givenName}`,
+      firstName: profile.name.givenName,
+      lastName: profile.name.familyName,
+      username: randomUsername(),
+      avatar: profile._json.picture,
       email: profile.emails[0].value,
       'social.googleProvider': {
         id: profile.id,
         token: accessToken
-      }
+      },
+      lastLogin: Date.now()
     })
 
     return newUser
