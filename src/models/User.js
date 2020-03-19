@@ -34,7 +34,9 @@ const UserSchema = new Schema(
       type: String
     },
     password: {
-      type: String
+      type: String,
+      min: [8, 'Password too short'],
+      max: [128, 'Password too long']
       // required: [true, 'Please add a password']
     },
     lastLogin: {
