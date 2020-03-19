@@ -92,7 +92,7 @@ UserSchema.statics.upsertFbUser = async function facebookAuth({
   profile
 }) {
   const User = this
-  const user = await User.findOne({ 'social.facebookProvider.id': profile.id })
+  const user = await User.findOne({ email: profile.emails[0].value })
 
   // no user was found, lets create a new one
   if (!user) {
@@ -112,7 +112,21 @@ UserSchema.statics.upsertFbUser = async function facebookAuth({
     return newUser
   }
 
-  return user
+  // if user was found, update the social providers and lastLogin
+  const updatedUser = await User.findOneAndUpdate(
+    { email: profile.emails[0].value },
+    {
+      $set: {
+        'social.facebookProvider': {
+          id: profile.id,
+          token: accessToken
+        },
+        lastLogin: Date.now()
+      }
+    }
+  )
+
+  return updatedUser
 }
 
 UserSchema.statics.upsertGoogleUser = async function googleAuth({
@@ -120,7 +134,7 @@ UserSchema.statics.upsertGoogleUser = async function googleAuth({
   profile
 }) {
   const User = this
-  const user = await User.findOne({ 'social.googleProvider.id': profile.id })
+  const user = await User.findOne({ email: profile.emails[0].value })
 
   // no user was found, lets create a new one
   if (!user) {
@@ -140,7 +154,21 @@ UserSchema.statics.upsertGoogleUser = async function googleAuth({
     return newUser
   }
 
-  return user
+  // if user was found, update the social providers and lastLogin
+  const updatedUser = await User.findOneAndUpdate(
+    { email: profile.emails[0].value },
+    {
+      $set: {
+        'social.googleProvider': {
+          id: profile.id,
+          token: accessToken
+        },
+        lastLogin: Date.now()
+      }
+    }
+  )
+
+  return updatedUser
 }
 
 const User = model('users', UserSchema)
