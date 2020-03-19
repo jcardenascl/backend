@@ -112,7 +112,21 @@ UserSchema.statics.upsertFbUser = async function facebookAuth({
     return newUser
   }
 
-  return user
+  // user found, update lastLogin and updated data from Facebook
+  const updatedUser = await User.findOneAndUpdate(
+    { _id: user._id },
+    {
+      $set: {
+        'social.facebookProvider': {
+          id: profile.id,
+          token: accessToken
+        },
+        lastLogin: Date.now()
+      }
+    }
+  )
+
+  return updatedUser
 }
 
 UserSchema.statics.upsertGoogleUser = async function googleAuth({
@@ -140,7 +154,21 @@ UserSchema.statics.upsertGoogleUser = async function googleAuth({
     return newUser
   }
 
-  return user
+  // user found, update lastLogin and updated data from Google
+  const updatedUser = await User.findOneAndUpdate(
+    { _id: user._id },
+    {
+      $set: {
+        'social.googleProvider': {
+          id: profile.id,
+          token: accessToken
+        },
+        lastLogin: Date.now()
+      }
+    }
+  )
+
+  return updatedUser
 }
 
 const User = model('users', UserSchema)
