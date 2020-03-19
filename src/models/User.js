@@ -1,10 +1,6 @@
 // Dependencies
 import { Schema, model } from 'mongoose'
 import { encrypt } from 'fogg-utils'
-import jwt from 'jsonwebtoken'
-
-// Configuration
-import { $security } from '@config'
 
 // Utils
 import randomUsername from '@utils/randomUsername'
@@ -72,21 +68,6 @@ UserSchema.pre('save', function preSave(next) {
 })
 
 // Models methods
-UserSchema.methods.generateJWT = function generateJwt() {
-  const today = new Date()
-  const expirationDate = new Date(today)
-  expirationDate.setDate(today.getDate() + 60)
-
-  return jwt.sign(
-    {
-      email: this.email,
-      id: this._id,
-      exp: parseInt(expirationDate.getTime() / 1000, 10)
-    },
-    $security().secretKey
-  )
-}
-
 UserSchema.statics.upsertFbUser = async function facebookAuth({
   accessToken,
   profile

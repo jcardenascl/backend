@@ -52,8 +52,8 @@ type Query {
 type Mutation {
   "Create user"
   user(input: UserInput!): User
-  # "Login user"
-  # login(input: LoginInput): AuthPayload!
+  "Login user"
+  login(input: LoginInput): AuthPayload!
   "Register/login with Facebook"
   facebookAuth(input: SocialAuthPayload!): AuthResponse
   "Register/login with Google"

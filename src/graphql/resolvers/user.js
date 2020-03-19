@@ -1,8 +1,8 @@
 // Error Handler
 import errorHandler from '@lib/errorHandler'
 
-// Login
-// import { doLogin } from '@utils/auth'
+// Utils
+import { doLogin, createToken } from '@utils/auth'
 import {
   facebookAuth as authFacebook,
   googleAuth as authGoogle
@@ -52,6 +52,8 @@ export default {
 
       return user
     },
+    login: (parent, { input: { email, password } }, { models }) =>
+      doLogin(email, password, models),
     facebookAuth: async (
       _,
       { input: { accessToken } },
@@ -68,11 +70,12 @@ export default {
 
         if (data) {
           const user = await User.upsertFbUser(data)
+          const [token] = await createToken(user)
 
           if (user) {
             return {
               name: `${user.firstName} ${user.lastName}`,
-              token: user.generateJWT()
+              token
             }
           }
         }
@@ -108,11 +111,12 @@ export default {
 
         if (data) {
           const user = await User.upsertGoogleUser(data)
+          const [token] = await createToken(user)
 
           if (user) {
             return {
               name: `${user.firstName} ${user.lastName}`,
-              token: user.generateJWT()
+              token
             }
           }
         }
