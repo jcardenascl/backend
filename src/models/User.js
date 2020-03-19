@@ -101,7 +101,6 @@ UserSchema.statics.upsertFbUser = async function facebookAuth({
       lastName: profile.name.familyName,
       username: randomUsername(),
       avatar: `https://graph.facebook.com/${profile.id}/picture?redirect=true&height=470&width=470`,
-      avatarThumb: profile.photos[0].value,
       email: profile.emails[0].value,
       'social.facebookProvider': {
         id: profile.id,
