@@ -24,7 +24,7 @@ export default {
         errorHandler('Not authorized', 'You must be logged in')
       }
 
-      return User.findById(auth.id)
+      return User.findById(auth.id).populate('transactions')
     },
     users: async (_, args, { models: { User } }) => {
       let users
