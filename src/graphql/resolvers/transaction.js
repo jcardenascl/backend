@@ -3,6 +3,13 @@ import errorHandler from '@lib/errorHandler'
 
 export default {
   Query: {
+    transactionsCount: (_, args, { user, models: { Transaction } }) => {
+      if (!user) return errorHandler('Not authorized', 'You must be logged in')
+
+      return Transaction.find({ user: user.id })
+        .countDocuments()
+        .then(count => ({ count }))
+    },
     transactions: async (
       _,
       { options = {} },

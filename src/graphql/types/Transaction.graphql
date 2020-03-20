@@ -32,7 +32,13 @@ enum Currency {
   USD
 }
 
+type CountPayload {
+  count: Int!
+}
+
 type Query {
+  "Get counts of transactions"
+  transactionsCount: CountPayload!
   "Get all transactions by user"
   transactions(options: OptionsInput): [Transaction!]
   "Get a transaction by user"
