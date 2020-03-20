@@ -21,11 +21,14 @@ export const getUser = token => {
 }
 
 export const createToken = async user => {
-  const { id, username, password, email } = user
+  const { id, firstName, lastName, username, avatar, email, password } = user
   const token = setBase64(`${encrypt($security().secretKey)}${password}`)
   const userData = {
     id,
+    firstName,
+    lastName,
     username,
+    avatar,
     email,
     token
   }
