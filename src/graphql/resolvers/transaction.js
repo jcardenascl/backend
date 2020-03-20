@@ -3,12 +3,8 @@ import errorHandler from '@lib/errorHandler'
 
 export default {
   Query: {
-    transactions: async (
-      _,
-      { user },
-      { user: auth, models: { Transaction } }
-    ) => {
-      if (!auth) errorHandler('Not authorized', 'You must be logged in')
+    transactions: async (_, { user, models: { Transaction } }) => {
+      if (!user) errorHandler('Not authorized', 'You must be logged in')
 
       let transactions
 
@@ -23,12 +19,8 @@ export default {
 
       return transactions
     },
-    transaction: async (
-      _,
-      { user, id },
-      { user: auth, models: { Transaction } }
-    ) => {
-      if (!auth) errorHandler('Not authorized', 'You must be logged in')
+    transaction: async (_, { id }, { user, models: { Transaction } }) => {
+      if (!user) errorHandler('Not authorized', 'You must be logged in')
 
       let transaction
 
@@ -47,7 +39,7 @@ export default {
   Mutation: {
     transaction: async (
       _,
-      { user: userId, input },
+      { input },
       { user: auth, models: { Transaction, User } }
     ) => {
       if (!auth) errorHandler('Not authorized', 'You must be logged in')
@@ -56,30 +48,32 @@ export default {
       let user
 
       try {
-        user = await User.findById({ _id: userId })
+        user = await User.findById(auth.id)
       } catch (error) {
         errorHandler(error)
       }
 
-      if (user) {
-        try {
-          transaction = await Transaction.create(input)
-
-          await User.findOneAndUpdate(
-            { _id: userId },
-            { $push: { transactions: transaction._id } },
-            { new: true }
-          )
-        } catch (error) {
-          errorHandler(error)
-        }
+      if (!user) {
+        return null
       }
 
-      return null
+      try {
+        transaction = await Transaction.create({ ...input, user: auth.id })
+
+        await User.findOneAndUpdate(
+          { _id: auth.id },
+          { $push: { transactions: transaction._id } },
+          { new: true }
+        )
+      } catch (error) {
+        errorHandler(error)
+      }
+
+      return transaction
     },
     updateTransaction: async (
       _,
-      { user: userId, id, input },
+      { id, input },
       { user: auth, models: { Transaction, User } }
     ) => {
       if (!auth) errorHandler('Not authorized', 'You must be logged in')
@@ -88,7 +82,7 @@ export default {
       let user
 
       try {
-        user = await User.findById({ _id: userId })
+        user = await User.findById(auth.id)
       } catch (error) {
         errorHandler(error)
       }
@@ -111,7 +105,7 @@ export default {
     },
     deleteTransaction: async (
       _,
-      { user: userId, id },
+      { id },
       { user: auth, models: { Transaction, User } }
     ) => {
       if (!auth) errorHandler('Not authorized', 'You must be logged in')
@@ -120,7 +114,7 @@ export default {
       let user
 
       try {
-        user = await User.findById({ _id: userId })
+        user = await User.findById(auth.id)
       } catch (error) {
         errorHandler(error)
       }

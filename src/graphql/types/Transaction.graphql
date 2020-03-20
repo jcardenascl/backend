@@ -12,7 +12,6 @@ input TransactionInput {
   description: String!
   ammount: Int!
   currency: Currency!
-  user: ID!
 }
 
 input UpdateTransactionInput {
@@ -28,20 +27,16 @@ enum Currency {
 
 type Query {
   "Get all transactions by user"
-  transactions(user: ID!): [Transaction]
+  transactions: [Transaction]
   "Get a transaction by user"
-  transaction(user: ID!, id: ID!): Transaction
+  transaction(id: ID!): Transaction
 }
 
 type Mutation {
   "Create transaction"
-  transaction(user: ID!, input: TransactionInput!): Transaction
+  transaction(input: TransactionInput!): Transaction
   "Update transaction"
-  updateTransaction(
-    user: ID!
-    id: ID!
-    input: UpdateTransactionInput!
-  ): Transaction
+  updateTransaction(id: ID!, input: UpdateTransactionInput!): Transaction
   "Delete transaction"
-  deleteTransaction(user: ID!, id: ID!): String
+  deleteTransaction(id: ID!): String
 }
