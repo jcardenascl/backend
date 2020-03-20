@@ -1,3 +1,6 @@
+// Dependencies
+import { PubSub } from 'apollo-server-express'
+
 // Error Handler
 import errorHandler from '@lib/errorHandler'
 
@@ -8,15 +11,20 @@ import {
   googleAuth as authGoogle
 } from '@utils/passport'
 
+const pubsub = new PubSub()
+
+// ACTIONS
+const USER_UPDATED = 'USER_UPDATED'
+
 export default {
   Query: {
     currentUser: (_, args, { user: auth, models: { User } }) => {
       // this if statement is our authentication check
       if (!auth) {
-        errorHandler(null, 'Not Authenticated')
+        errorHandler('Not authorized', 'You must be logged in')
       }
 
-      return User.find({ _id: auth.id })
+      return User.findById(auth.id)
     },
     users: async (_, args, { models: { User } }) => {
       let users
@@ -58,7 +66,6 @@ export default {
       { user: auth, models: { User } }
     ) => {
       if (!auth) errorHandler('Not authorized', 'You must be logged in')
-      console.log(auth.id === userId)
 
       let user
 
@@ -79,9 +86,10 @@ export default {
           { new: true, useFindAndModify: false }
         )
       } catch (err) {
-        errorHandler(err)
+        errorHandler(err, 'An error has ocurred, please try again')
       }
 
+      pubsub.publish(USER_UPDATED, user)
       return user
     },
     login: (parent, { input: { email, password } }, { models }) => {
