@@ -23,8 +23,8 @@ export default {
 
       try {
         users = await User.find().populate('transactions')
-      } catch (error) {
-        errorHandler(error)
+      } catch (err) {
+        errorHandler(err)
       }
 
       return users
@@ -52,8 +52,41 @@ export default {
 
       return user
     },
-    login: (parent, { input: { email, password } }, { models }) =>
-      doLogin(email, password, models),
+    updateUser: async (
+      _,
+      { userId, input },
+      { user: auth, models: { User } }
+    ) => {
+      if (!auth) errorHandler('Not authorized', 'You must be logged in')
+      console.log(auth.id === userId)
+
+      let user
+
+      try {
+        user = await User.findById({ _id: auth.id })
+      } catch (error) {
+        errorHandler(error)
+      }
+
+      if (auth.id !== userId) {
+        errorHandler('Not authorized', 'You must be logged in')
+      }
+
+      try {
+        user = await User.findOneAndUpdate(
+          { _id: auth.id },
+          { $set: input },
+          { new: true, useFindAndModify: false }
+        )
+      } catch (err) {
+        errorHandler(err)
+      }
+
+      return user
+    },
+    login: (parent, { input: { email, password } }, { models }) => {
+      return doLogin(email, password, models)
+    },
     facebookAuth: async (
       _,
       { input: { accessToken } },

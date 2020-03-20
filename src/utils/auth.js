@@ -3,21 +3,25 @@ import jwt from 'jsonwebtoken'
 import { AuthenticationError } from 'apollo-server-express'
 
 // Utils
-import { encrypt, setBase64, isPasswordMatch } from 'fogg-utils'
+import { encrypt, setBase64, getBase64, isPasswordMatch } from 'fogg-utils'
 
 // Configuration
 import { $security } from '@config'
 
-export const getUser = token => {
+export const getUser = async token => {
+  let data
+
   try {
     if (token) {
-      return jwt.verify(token, $security().secretKey)
-    }
+      const decodeToken = jwt.verify(token, $security().secretKey)
 
-    return null
+      data = getBase64(decodeToken.data)
+    }
   } catch (err) {
     return null
   }
+
+  return data
 }
 
 export const createToken = async user => {
@@ -50,15 +54,10 @@ export const doLogin = async (email, password, models) => {
   }
 
   const passwordMatch = isPasswordMatch(encrypt(password), user.password)
-  // const isActive = user.active
 
   if (!passwordMatch) {
     throw new AuthenticationError('Invalid login')
   }
-
-  // if (!isActive) {
-  //   throw new AuthenticationError('Your account is not activated yet')
-  // }
 
   const [token] = await createToken(user)
 

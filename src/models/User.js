@@ -33,7 +33,9 @@ const UserSchema = new Schema(
       type: String,
       min: [8, 'Password too short'],
       max: [128, 'Password too long']
-      // required: [true, 'Please add a password']
+    },
+    salary: {
+      type: Number
     },
     lastLogin: {
       type: Date

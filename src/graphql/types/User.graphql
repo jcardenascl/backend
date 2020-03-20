@@ -6,6 +6,7 @@ type User {
   email: String!
   password: String
   transactions: [Transaction]
+  salary: Int
 }
 
 type AuthPayload {
@@ -35,6 +36,7 @@ input UpdateUserInput {
   username: String
   email: String
   password: String
+  salary: Int
 }
 
 input LoginInput {
@@ -52,6 +54,8 @@ type Query {
 type Mutation {
   "Create user"
   user(input: UserInput!): User
+  "Update user"
+  updateUser(userId: ID!, input: UpdateUserInput): User
   "Login user"
   login(input: LoginInput): AuthPayload!
   "Register/login with Facebook"
