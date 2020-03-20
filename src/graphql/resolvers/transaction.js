@@ -3,16 +3,39 @@ import errorHandler from '@lib/errorHandler'
 
 export default {
   Query: {
-    transactions: async (_, { user, models: { Transaction } }) => {
-      if (!user) errorHandler('Not authorized', 'You must be logged in')
+    transactions: async (
+      _,
+      { options = {} },
+      { user, models: { Transaction } }
+    ) => {
+      if (!user) return errorHandler('Not authorized', 'You must be logged in')
 
       let transactions
+      const {
+        orderBy = 'createdAt',
+        direction = 'desc',
+        limit = false,
+        offset = false
+      } = options
+
+      const args = {}
+
+      if (limit > 0) {
+        args.limit = limit
+      }
+
+      if (offset > 0) {
+        args.offset = offset
+      }
+
+      console.log(`${orderBy}: ${direction}`)
 
       try {
-        transactions = await Transaction.find({ user }).populate(
-          'user',
-          'id firstName lastName username email'
-        )
+        transactions = await Transaction.find({ user: user.id })
+          .sort({ [orderBy]: direction })
+          .skip(offset)
+          .limit(limit)
+          .populate('user', 'id firstName lastName username email')
       } catch (error) {
         errorHandler(error)
       }

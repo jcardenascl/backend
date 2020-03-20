@@ -20,6 +20,13 @@ input UpdateTransactionInput {
   currency: Currency
 }
 
+input OptionsInput {
+  orderBy: String
+  direction: String
+  limit: Int
+  offset: Int
+}
+
 enum Currency {
   VEF
   USD
@@ -27,7 +34,7 @@ enum Currency {
 
 type Query {
   "Get all transactions by user"
-  transactions: [Transaction]
+  transactions(options: OptionsInput): [Transaction!]
   "Get a transaction by user"
   transaction(id: ID!): Transaction
 }
