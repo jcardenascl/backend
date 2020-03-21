@@ -4,6 +4,7 @@
   "description": "Backend service in GraphQL for the Expense Tracker app",
   "main": "src/server.js",
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "dev": "nodemon src/server.js --ext js,graphql --exec babel-node",
     "lint": "eslint ."
   },
@@ -30,6 +31,7 @@
     "eslint-plugin-import": "^2.20.1",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
+    "minimist": "^1.2.5",
     "nodemon": "^2.0.2"
   },
   "dependencies": {
@@ -51,5 +53,8 @@
     "passport-google-token": "^0.1.2",
     "passport-token-google2": "^0.1.4",
     "uuid": "^7.0.2"
+  },
+  "resolutions": {
+    "minimist": "^1.2.5"
   }
 }
