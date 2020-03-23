@@ -35,8 +35,6 @@ export default {
         args.offset = offset
       }
 
-      console.log(`${orderBy}: ${direction}`)
-
       try {
         transactions = await Transaction.find({ user: user.id })
           .sort({ [orderBy]: direction })

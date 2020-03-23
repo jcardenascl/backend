@@ -25,22 +25,19 @@ export const getUser = async token => {
 }
 
 export const createToken = async user => {
-  const { id, firstName, lastName, username, avatar, email, password } = user
+  const { id, password } = user
   const token = setBase64(`${encrypt($security().secretKey)}${password}`)
   const userData = {
     id,
-    firstName,
-    lastName,
-    username,
-    avatar,
-    email,
     token
   }
 
   const createTk = jwt.sign(
     { data: setBase64(userData) },
     $security().secretKey,
-    { expiresIn: $security().expiresIn }
+    {
+      expiresIn: $security().expiresIn
+    }
   )
 
   return Promise.all([createTk])
