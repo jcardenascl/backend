@@ -45,7 +45,7 @@
     "graphql": "^14.6.0",
     "jsonwebtoken": "^8.5.1",
     "merge-graphql-schemas": "^1.7.6",
-    "mongoose": "^5.9.5",
+    "mongoose": "^5.13.20",
     "morgan": "^1.10.0",
     "passport": "^0.4.1",
     "passport-facebook-token": "^3.3.0",
